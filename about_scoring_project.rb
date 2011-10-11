@@ -29,9 +29,61 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 #
 # Your goal is to write the score method.
 
+# inspritation from: http://www.peteonsoftware.com/index.php/2009/08/17/the-greed-ruby-koan/
+
 def score(dice)
-  # You need to write this method
+  tally = 0
+
+  dice_sort = {1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 6=>0}
+  
+  dice.each do |die|
+    dice_sort[die] += 1    #  key technique 
+  end
+  
+  dice_sort.each_pair do |die, count|
+    if count > 3
+      while count > 3   # runs through again if the count is higher than three
+        tally += tally_up(die, [count, 3].min)    # either go with 3 or the count
+        count -= 3
+      end
+      tally += tally_up(die, count)      
+    else
+      tally += tally_up(die, count)
+    end
+  end
+  
+  return tally if valid_dice?(dice)
 end
+
+def valid_dice?(dice)
+  return true if (dice.count>0 or dice.count<6)
+end
+
+def tally_up(die, count)
+  tally = 0
+  
+  #  SCORES
+  three_ones = 1000
+  three_otherwise_multiplier = 100
+  each_one = 100
+  each_five = 50
+  
+  if count < 3
+    case die
+    when 1 then tally += each_one*count
+    when 5 then tally += each_five*count
+    end
+  elsif count == 3
+    case die
+    when 1 then tally += three_ones
+    else tally += die*three_otherwise_multiplier
+    end
+  end
+  
+  return tally
+end
+
+#--------TESTS-----------------------------
 
 class AboutScoringProject < EdgeCase::Koan
   def test_score_of_an_empty_list_is_zero

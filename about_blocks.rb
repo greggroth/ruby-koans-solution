@@ -77,7 +77,7 @@ class AboutBlocks < EdgeCase::Koan
   def test_stand_alone_blocks_can_be_passed_to_methods_expecting_blocks
     make_upper = lambda { |n| n.upcase }
     result = method_with_block_arguments(&make_upper)
-    assert_equal __, result
+    assert_equal "JIM", result
   end
 
   # ------------------------------------------------------------------
@@ -87,10 +87,10 @@ class AboutBlocks < EdgeCase::Koan
   end
 
   def test_methods_can_take_an_explicit_block_argument
-    assert_equal __, method_with_explicit_block { |n| n * 2 }
+    assert_equal 20, method_with_explicit_block { |n| n * 2 }
 
     add_one = lambda { |n| n + 1 }
-    assert_equal __, method_with_explicit_block(&add_one)
+    assert_equal 11, method_with_explicit_block(&add_one)
   end
 
 end
